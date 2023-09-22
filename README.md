@@ -1,1 +1,1 @@
-# Terminated-Trials-Analysis-Stusy
+# Terminated-Trials-Analysis-Study
