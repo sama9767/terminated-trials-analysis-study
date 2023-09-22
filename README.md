@@ -1,6 +1,6 @@
 # terminated-trials-analysis-study
 
-## Description
+## Overview
 A repository for analysing ClinicalTrials.gov registered trials with a "Terminated" status, using functions from the [terminated-trials-study](https://github.com/sama9767/terminated-trials-study/tree/main) package.
 
 
@@ -14,7 +14,7 @@ The dataset used for processing should include trial ID (nctid) of ClinicalTrial
 
 ## Dependencies: 
 1. The 'cthist' package is utilised to obtain historical entries for the terminated trials
-2. Two functions are employed in the script:
+2. The Following Two functions are employed from the 'terminatedtrialsstudy' :
   - The `duration_of_trial` function calculates the number of days the trial was ongoing until termination, referred to as "trial_days."
   - The `degree_of_enrollment` function calculates the percentage of enrollment achieved for a particular terminated trial, known as "enrollment_percentage."
 
