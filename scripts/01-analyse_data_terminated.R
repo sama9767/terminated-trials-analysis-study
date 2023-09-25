@@ -53,15 +53,15 @@ terminated_cthist <-
   ungroup()
 
 # create reason for termination variable (refers to the reason of termination for a clinical trial)
-terminated_cthist <- terminated_cthist %>% 
-  dplyr::group_by(nctid) %>% 
-  dplyr::mutate(why_stopped = ifelse(any(nzchar(whystopped)), dplyr::last(na.omit(whystopped)),NA_character_)) %>% 
+terminated_cthist <- terminated_cthist |> 
+  dplyr::group_by(nctid) |> 
+  dplyr::mutate(why_stopped = ifelse(any(nzchar(whystopped)), dplyr::last(na.omit(whystopped)),NA_character_)) |> 
   dplyr::ungroup() 
 
 # create has_summary_result_ctgov variable (refers to summary resulted posted in ClinicalTrial.gov)
-terminated_cthist <- terminated_cthist %>% 
-  dplyr::group_by(nctid) %>% 
-  dplyr::mutate(has_summary_result_ctgov = ifelse(dplyr::last(results_posted) == "TRUE", TRUE, FALSE)) %>% 
+terminated_cthist <- terminated_cthist |> 
+  dplyr::group_by(nctid) |> 
+  dplyr::mutate(has_summary_result_ctgov = ifelse(dplyr::last(results_posted) == "TRUE", TRUE, FALSE)) |> 
   dplyr::ungroup()
 
 
@@ -87,32 +87,32 @@ terminated_cthist <-
 ## degree of recruitment (anticipated and actual enrollment) ---------
 
 # create a 'anticipated enrollment' variable (refers to the expected number of participants that the trial aims to enroll)
-terminated_cthist <- terminated_cthist %>% 
-  dplyr::group_by(nctid) %>% 
+terminated_cthist <- terminated_cthist |> 
+  dplyr::group_by(nctid) |> 
   dplyr::mutate(anticipated_enrollment = ifelse(enrolment_type == "ESTIMATED", as.integer(enrolment), NA_integer_),
-                anticipated_enrollment = last(na.omit(anticipated_enrollment))) %>% 
+                anticipated_enrollment = last(na.omit(anticipated_enrollment))) |> 
   dplyr::ungroup()
 
 # create a 'actual enrollment' variable (refers to the observed number of participants who are actually enrolled)
-terminated_cthist <- terminated_cthist %>% 
-  dplyr::group_by(nctid) %>% 
+terminated_cthist <- terminated_cthist |> 
+  dplyr::group_by(nctid) |> 
   dplyr::mutate(actual_enrollment = ifelse(enrolment_type == "ACTUAL", as.integer(enrolment), NA_integer_),
-                actual_enrollment = last(actual_enrollment)) %>% 
+                actual_enrollment = last(actual_enrollment)) |> 
   dplyr::ungroup()
 
 
 
 # keep unique observations generated for each trial
-terminated_cthist_updated <- terminated_cthist %>% 
-  dplyr::group_by(nctid) %>%
+terminated_cthist_updated <- terminated_cthist |> 
+  dplyr::group_by(nctid) |>
   dplyr::mutate(
     anticipated_enrollment = anticipated_enrollment,
     actual_enrollment = actual_enrollment,
     start_date = na.omit(start_date)[1]
-  ) %>% 
-  dplyr::ungroup() %>%
+  ) |> 
+  dplyr::ungroup() |>
   # select required columns
-  dplyr::select(nctid, why_stopped, has_summary_result_ctgov, anticipated_enrollment, actual_enrollment, start_date, stop_date) %>%
+  dplyr::select(nctid, why_stopped, has_summary_result_ctgov, anticipated_enrollment, actual_enrollment, start_date, stop_date) |>
   # keep distinct observation
   dplyr::distinct(nctid, .keep_all = TRUE) 
 
