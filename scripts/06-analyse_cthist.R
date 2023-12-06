@@ -1,22 +1,12 @@
-# this script 
-
-
 #remotes::install_github("sama9767/terminated-trials-study")
 library(terminatedtrialsstudy)
 library(dplyr)
 
 
-# reading raw data
-cthist_raw_path <- fs::path_home("Charité - Universitätsmedizin Berlin", 
-                               "Clinical Patient Data (AG Strech) - The Terminated Trials Study - The Terminated Trials Study",
-                               "06_Data", "2023-12-01-historical-versions.csv")
-
-
 # read raw data
-cthist_raw <- read.csv(cthist_raw_path)
+cthist_raw <- read.csv(here::here("data", "processed", "2023-12-01-historical-versions.csv"))
 
-
-# Apply terminated exclusion criteria (final status as 'terminated' and enrolment > 1)-----
+# apply terminated exclusion criteria (final status as 'terminated' and enrolment > 1)-----
 cthist_terminated <- cthist_raw |>
   group_by(nctid) |>
   summarise(
