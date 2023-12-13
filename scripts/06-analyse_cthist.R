@@ -1,10 +1,11 @@
 #remotes::install_github("sama9767/terminated-trials-study")
 library(terminatedtrialsstudy)
 library(dplyr)
+library(readr)
 
 
 # read raw data
-cthist_raw <- read.csv(here::here("data", "processed", "2023-12-01-historical-versions.csv"))
+cthist_raw <- read_csv(here::here("data", "processed", "2023-12-01-historical-versions.csv"))
 
 # apply terminated exclusion criteria (final status as 'terminated' and enrolment > 1)-----
 cthist_terminated <- cthist_raw |>
