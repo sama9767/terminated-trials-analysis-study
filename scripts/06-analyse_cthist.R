@@ -7,14 +7,19 @@ library(readr)
 # read raw data
 cthist_raw <- read_csv(here::here("data", "processed", "2023-12-01-historical-versions.csv"))
 
-# apply terminated exclusion criteria (final status as 'terminated' and enrolment > 1)-----
+# apply terminated exclusion criteria (final status as 'terminated' and actual enrolment > 0)-----
 cthist_terminated <- cthist_raw |>
   group_by(nctid) |>
   summarise(
-    final_status = last(overall_status),
-    total_enrollment = sum(enrolment)
+      final_overall_status = last(overall_status),
+      final_enrollment_type = last(enrolment_type),
+      final_enrollment = last(enrolment)
   ) |>
-  filter(final_status == "TERMINATED" & total_enrollment > 1) |>
+    filter(
+        final_overall_status == "TERMINATED" &
+        final_enrollment_type == "ACTUAL" &
+        final_enrollment > 0
+    ) |>
   ungroup()
 
 
