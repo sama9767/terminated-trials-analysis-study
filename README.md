@@ -32,7 +32,7 @@ Variables Generated:
 
 
 ## Step 2: Patient Harm Analysis
-In the second phase, we estimated patient harm in terminated trials by comparing the risk of serious adverse events (SAEs) between intervention and control groups. To achieve this, we focus on trials reporting adverse events on ClinicalTrials.gov, with at least two arms where comparisons between groups are feasible. For details [see](https://charitede.sharepoint.com/:w:/r/sites/ClinicalResearchAGStrech-IntoValueTerminatedTrialsStudy/Shared%20Documents/The%20Terminated%20Trials%20Study/03_SAE-data-and-analysis/Terminated-Trial-Risk-Protocol.docx?d=w5a70c8271d6c4ed4930bc0cd43cce2cd&csf=1&web=1&e=ogrA7Z)
+In the second phase, we estimated patient harm in terminated trials by comparing the risk of serious adverse events (SAEs) between intervention and control groups. To achieve this, we focus on trials reporting adverse events on ClinicalTrials.gov, with at least two arms where comparisons between groups are feasible. For details [see](https://charitede.sharepoint.com/:w:/r/sites/ClinicalResearchAGStrech-IntoValueTerminatedTrialsStudy/Shared%20Documents/The%20Terminated%20Trials%20Study/03_SAE-data-and-analysis/Terminated-Trial-Risk-Protocol.docx?d=w5a70c8271d6c4ed4930bc0cd43cce2cd&csf=1&web=1&e=ogrA7Z).
 
 For Intovalue trials that are cross-registered in EUCTR but lack summary results on ClinicalTrials.gov, we cross-checked the EUCTR registry to obtain comparable SAE data.
 
