@@ -8,9 +8,9 @@ Data processing and analysis: Research project on analyzing terminated trials us
 Terminated status reported trial registry and enrollment > 0.
 
 ## Step 1: Data Download and Processing
-The study begins by downloading historical records for ClinicalTrials.gov registered terminated trials using the ['cthist'] (https://github.com/bgcarlisle/cthist) package, developed by BG Carlisle. In addition to trial metadata, we manually assigned the reason for trial termination into one of four categories: scientific, non-scientific, other, and reason not provided.
+The study begins by downloading historical records for ClinicalTrials.gov registered terminated trials using the ['cthist'](https://github.com/bgcarlisle/cthist) R package, developed by BG Carlisle. Additionally, we use ['terminatedtrialsstudy'](https://github.com/sama9767/terminated-trials-study/tree/main) R package to retrieve characteristic data for these terminated trials. We manually categorized the reasons for trial termination into one of four categories: scientific, non-scientific, other, and reason not provided, based on a categorization table developed during the project.
 
-Variables Generated:
+### Variables Generated:
 | variable               | description                                                                                                    | level         |
 |------------------------|----------------------------------------------------------------------------------------------------------------|---------------|
 | `nctid`                | Unique identifier for the clinical trial (Trial ID)                                                            | Character     |
@@ -29,8 +29,8 @@ Variables Generated:
 | `therapeutic_focus`    | The final assigned therapeutic focus of the trial (e.g., oncology, cardiology, etc.)                                          | Character     |
 
 ## Related scripts
-- 01-get-characterisrics_termianted_teials.R: Generates descriptive statistics for terminated trials.
-- 02-catgorize_termianted_trials.R: Categorizes trials based on the reason for termination.
+- 01-get-characterisrics_terminated_trials.R: Generates descriptive statistics for terminated trials.
+- 02-categorize_terminated_trials.R: Categorizes trials based on the reason for termination.
 
 
 ## Step 2: Patient Harm Analysis
@@ -40,5 +40,5 @@ For Intovalue trials that are cross-registered in EUCTR but lack summary results
 
 Related Scripts:
 - 03-prepare_patient_harm_data.R: Data preparation for harm analysis.
-- 04-analyze_patient_harm_data.R: Conducts analysis to estimate patient harm.
+- 04-analyse_patient_harm_data.R: Conducts analysis to estimate patient harm.
 
