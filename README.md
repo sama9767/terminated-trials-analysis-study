@@ -5,7 +5,7 @@ Data processing and analysis: Research project on analyzing terminated trials us
 - Publication: TBD
 
 ## Inclusion Criteria:
-Terminated status reported trial registry and enrollment > 0.
+Trial status reported as 'Terminated' in the registry and enrollment > 0.
 
 ## Step 1: Data Download and Processing
 The study begins by downloading historical records for ClinicalTrials.gov registered terminated trials using the ['cthist'](https://github.com/bgcarlisle/cthist) R package, developed by BG Carlisle. Additionally, we use ['terminatedtrialsstudy'](https://github.com/sama9767/terminated-trials-study/tree/main) R package to retrieve characteristic data for these terminated trials. We manually categorized the reasons for trial termination into one of four categories: scientific, non-scientific, other, and reason not provided, based on a categorization table developed during the project.
