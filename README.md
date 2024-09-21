@@ -18,13 +18,15 @@ Variables Generated:
 | `reason_category`      | Categorized reason for trial termination (`scientific`, `non_scientific`, `other`, or `reason not provided`)   | Categorical   |
 | `source`               | Identifies the source dataset for the trial ID (e.g., `intovalue`, `contrast`)                                 | Character     |
 | `has_summary_result`   | Boolean indicating whether summary results are available on ClinicalTrials.gov for the trial                   | Boolean       |
+| `has_summaty_result_updated`| Boolean indicating whether summary results are available on ClinicalTrials.gov or EUCTR for the trial |Boolean|
 | `start_date`           | The date the trial started (format: `YYYY-MM-DD`)                                                              | Date          |
 | `stop_date`            | The date when the trial's status was first updated to "Terminated" in the registry (format: `YYYY-MM-DD`)      | Date          |
 | `trial_days`           | Number of days the trial was ongoing until termination, calculated as `stop_date - start_date`                 | Integer       |
 | `anticipated_enrollment`| The expected number of participants the trial aimed to enrol                                                  | Integer       |
 | `actual_enrollment`    | The actual number of participants enrolled in the trial                                                        | Integer       |
 | `enrollment_percentage`| The percentage of enrollment achieved at the time of termination, calculated as `(actual_enrollment / anticipated_enrollment) * 100` | Percentage |
-| `therapeutic_focus`    | The therapeutic focus of the trial (e.g., oncology, cardiology, etc.)                                          | Character     |
+|`trial_foci_table_list`| List of therapeutic foci of the trial | Character|
+| `therapeutic_focus`    | The final assigned therapeutic focus of the trial (e.g., oncology, cardiology, etc.)                                          | Character     |
 
 ## Related scripts
 - 01-get-characterisrics_termianted_teials.R : Generates descriptive statistics for terminated trials.
