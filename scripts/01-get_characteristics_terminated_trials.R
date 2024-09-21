@@ -101,13 +101,6 @@ cthist_terminated <-
 cthist_terminated <- terminatedtrialsstudy::degree_of_enrollment(cthist_terminated, anticipated_column = "anticipated_enrollment" , actual_column = "actual_enrollment", round_off = 2)
 cthist_terminated <- duration_of_trial(cthist_terminated, "start_date", "stop_date")
 
-# Merge with manual reason for termination categorization data
-terminated_reason_categorized <- read.csv(here::here("data", "processed", "terminated_reason_categorized.csv")) |>
-  select(-X)
-cthist_terminated <- 
-  cthist_terminated |>
-  left_join(terminated_reason_categorized, by = "nctid") |>
-  select(-reason_for_termination.x)
 
 # Get therapeutic foci of included trials
 #cthist_terminated <- TrialFociMapper::get_foci_ctgov(cthist_terminated$nctid, username = "username", password = "password")
@@ -151,10 +144,4 @@ summary_enrollment <-
     .groups = 'drop'  # Drop the grouping structure in the output
   )
 
-
-# Categorize reason for termination
-cthist_terminated |>
-  count(reason_category, source)
-
-cthist_terminated |>
-  count(primary_reason, source)
+saveRDS(cthist_terminated, file = here::here("data", "processed", "cthist_terminated_1.rds"))

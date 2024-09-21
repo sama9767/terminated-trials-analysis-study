@@ -11,7 +11,8 @@ patient_harm_ctgov_raw <- read_xlsx(here::here("data","manual", "manual-2024-04-
 patient_harm_euctr_raw <- read_xlsx(here::here("data","manual", "manual-2024-04-29-sae_by_group.xlsx"), sheet = "Reconciliation_EUCTR")
 
 # Filter CTGOV trials included for patient harm analysis
-patient_harm_ctgov <- patient_harm_ctgov_raw |>
+patient_harm_ctgov <- 
+  patient_harm_ctgov_raw |>
   group_by(nctid) |>
   filter(final_include_for_patient_harm == TRUE) |>
   select(nctid, group_id, seriousNumAffected, seriousNumAtRisk, final_arm_assigned, final_include_for_patient_harm)
