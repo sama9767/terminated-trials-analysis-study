@@ -29,17 +29,16 @@ Variables Generated:
 | `therapeutic_focus`    | The final assigned therapeutic focus of the trial (e.g., oncology, cardiology, etc.)                                          | Character     |
 
 ## Related scripts
-- 01-get-characterisrics_termianted_teials.R : Generates descriptive statistics for terminated trials.
-- 02-catgorize_termianted_trials.R : Categorizes trials based on the reason for termination.
+- 01-get-characterisrics_termianted_teials.R: Generates descriptive statistics for terminated trials.
+- 02-catgorize_termianted_trials.R: Categorizes trials based on the reason for termination.
 
 
 ## Step 2: Patient Harm Analysis
-In the second phase, we estimated patient harm in terminated trials by comparing the risk of serious adverse events (SAEs) between intervention and control groups. To achieve this, we focus on trials reporting adverse events on ClinicalTrials.gov, with at least two arms where comparisons between groups are feasible. For details [see](https://charitede.sharepoint.com/:w:/r/sites/ClinicalResearchAGStrech-IntoValueTerminatedTrialsStudy/Shared%20Documents/The%20Terminated%20Trials%20Study/03_SAE-data-and-analysis/Terminated-Trial-Risk-Protocol.docx?d=w5a70c8271d6c4ed4930bc0cd43cce2cd&csf=1&web=1&e=ogrA7Z).
+In the second phase, we estimated patient harm in terminated trials by comparing the risk of serious adverse events (SAEs) between intervention and control groups. To achieve this, we focus on trials reporting adverse events on ClinicalTrials.gov, with at least two arms where comparisons between groups are feasible, for details [see](https://charitede.sharepoint.com/:w:/r/sites/ClinicalResearchAGStrech-IntoValueTerminatedTrialsStudy/Shared%20Documents/The%20Terminated%20Trials%20Study/03_SAE-data-and-analysis/Terminated-Trial-Risk-Protocol.docx?d=w5a70c8271d6c4ed4930bc0cd43cce2cd&csf=1&web=1&e=ogrA7Z).
 
 For Intovalue trials that are cross-registered in EUCTR but lack summary results on ClinicalTrials.gov, we cross-checked the EUCTR registry to obtain comparable SAE data.
 
 Related Scripts:
-- 03A-prepare_patient_harm_data.R: Prepares raw data for patient harm analysis.
-- 03B-prepare_patient_harm_data.R: Further data preparation for harm analysis.
+- 03-prepare_patient_harm_data.R: Data preparation for harm analysis.
 - 04-analyze_patient_harm_data.R: Conducts analysis to estimate patient harm.
 
