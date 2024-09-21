@@ -34,8 +34,8 @@ patient_harm_euctr |> distinct(nctid) |> nrow()
 patient_harm <- rbind(patient_harm_ctgov, patient_harm_euctr)
 patient_harm |> distinct(nctid) |> nrow()
 
-# Aggregate similar trial arms for better analysis
-aggregated_data <- aggregate_arms(patient_harm, trial_id = "nctid", arm_assigned = "final_arm_assigned", affected_col = "seriousNumAffected", risk_col = "seriousNumAtRisk")
+# Aggregate similar trial arms for analysis
+aggregated_data <- terminatedtrialsstudy::aggregate_arms(patient_harm, trial_id = "nctid", arm_assigned = "final_arm_assigned", affected_col = "seriousNumAffected", risk_col = "seriousNumAtRisk")
 
 # Summarize data by trial for analysis
 df_summary <- aggregated_data |>
