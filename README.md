@@ -18,7 +18,7 @@ The study begins by downloading historical records for ClinicalTrials.gov regist
 | `reason_category`      | Categorized reason for trial termination (`scientific`, `non_scientific`, `other`, or `reason not provided`)   | Categorical   |
 | `source`               | Identifies the source dataset for the trial ID (e.g., `intovalue`, `contrast`)                                 | Character     |
 | `has_summary_result`   | Boolean indicating whether summary results are available on ClinicalTrials.gov for the trial                   | Boolean       |
-| `has_summaty_result_updated`| Boolean indicating whether summary results are available on ClinicalTrials.gov or EUCTR for the trial |Boolean|
+| `has_summary_result_updated`| Boolean indicating whether summary results are available on ClinicalTrials.gov or EUCTR for the trial |Boolean|
 | `start_date`           | The date the trial started (format: `YYYY-MM-DD`)                                                              | Date          |
 | `stop_date`            | The date when the trial's status was first updated to "Terminated" in the registry (format: `YYYY-MM-DD`)      | Date          |
 | `trial_days`           | Number of days the trial was ongoing until termination, calculated as `stop_date - start_date`                 | Integer       |
