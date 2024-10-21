@@ -102,10 +102,11 @@ cthist_terminated <- terminatedtrialsstudy::degree_of_enrollment(cthist_terminat
 cthist_terminated <- duration_of_trial(cthist_terminated, "start_date", "stop_date")
 
 
+
 # Get therapeutic foci of included trials
 #cthist_terminated <- TrialFociMapper::get_foci_ctgov(cthist_terminated$nctid, username = "username", password = "password")
 #cthist_terminated <- TrialFociMapper::assign_therapeutic_focus(data = cthist_terminated, nctid_col = nct_id, mesh_heading_cols = 'trial_foci_table_list')
-cthist_terminated_foci <- readRDS(here::here("data", "processed", "19-9-2024-cthist_terminated_foci.rds"))
+cthist_terminated_foci <- readRDS(here::here("data", "processed", "2024-09-19-cthist_terminated_foci.rds"))
 
 # Merge the therapeutic focus data with cthist_terminated dataset
 cthist_terminated <- 
@@ -129,19 +130,33 @@ summary_trial_days <-
     total_trial_days = sum(trial_days, na.rm = TRUE) # Total value of trial_days
     )
 
-# Summarize the total anticipated and actual enrollment by source
-summary_enrollment <- 
+# Summarize the median and IQR for anticipated enrollment by source
+# Summarize the median, IQR, and specific percentiles for anticipated enrollment by source
+summary_anticipated_enrollment <- 
   cthist_terminated |>
   group_by(source) |>  # Group by the 'source' column
   summarise(
-    total_anticipated_enrollment = sum(anticipated_enrollment, na.rm = TRUE),
-    total_actual_enrollment = sum(actual_enrollment, na.rm = TRUE),
-    min_anticipated_enrollment = min(anticipated_enrollment, na.rm = TRUE),
-    max_anticipated_enrollment = max(anticipated_enrollment, na.rm = TRUE),
-    min_actual_enrollment = min(actual_enrollment, na.rm = TRUE),
-    max_actual_enrollment = max(actual_enrollment, na.rm = TRUE),
-    total_enrollment_percentage = 100 * total_actual_enrollment / total_anticipated_enrollment,
+    median_anticipated_enrollment = median(anticipated_enrollment, na.rm = TRUE), # Median of anticipated enrollment
+    IQR_anticipated_enrollment = IQR(anticipated_enrollment, na.rm = TRUE), # IQR of anticipated enrollment
+    Q1_anticipated_enrollment = quantile(anticipated_enrollment, 0.25, na.rm = TRUE), # 25th percentile (Q1)
+    Q3_anticipated_enrollment = quantile(anticipated_enrollment, 0.75, na.rm = TRUE), # 75th percentile (Q3)
+    max_anticipated_enrollment = quantile(anticipated_enrollment, 1, na.rm = TRUE), # 100th percentile (max)
     .groups = 'drop'  # Drop the grouping structure in the output
   )
+
+
+# Summarize the median, IQR, and specific percentiles for anticipated enrollment by source
+summary_actual_enrollment <- 
+  cthist_terminated |>
+  group_by(source) |>  # Group by the 'source' column
+  summarise(
+    median_actual_enrollment = median(actual_enrollment, na.rm = TRUE), # Median of anticipated enrollment
+    IQR_actual_enrollment = IQR(actual_enrollment, na.rm = TRUE), # IQR of anticipated enrollment
+    Q1_actual_enrollment = quantile(actual_enrollment, 0.25, na.rm = TRUE), # 25th percentile (Q1)
+    Q3_actual_enrollment = quantile(actual_enrollment, 0.75, na.rm = TRUE), # 75th percentile (Q3)
+    max_actual_enrollment = quantile(actual_enrollment, 1, na.rm = TRUE), # 100th percentile (max)
+    .groups = 'drop'  # Drop the grouping structure in the output
+  )
+
 
 saveRDS(cthist_terminated, file = here::here("data", "processed", "cthist_terminated_1.rds"))
