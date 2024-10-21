@@ -5,7 +5,7 @@ Data processing and analysis: Research project on analyzing terminated trials us
 - Publication: TBD
 
 ## Inclusion Criteria:
-Terminated status reported trial registry and enrollment > 0.
+Trial status reported as 'Terminated' in the registry and enrollment > 0.
 
 ## Step 1: Data Download and Processing
 The study begins by downloading historical records for ClinicalTrials.gov registered terminated trials using the ['cthist'](https://github.com/bgcarlisle/cthist) R package, developed by BG Carlisle. Additionally, we use ['terminatedtrialsstudy'](https://github.com/sama9767/terminated-trials-study/tree/main) R package to retrieve characteristic data for these terminated trials. We manually categorized the reasons for trial termination into one of four categories: scientific, non-scientific, other, and reason not provided, based on a categorization table developed during the project.
@@ -18,7 +18,7 @@ The study begins by downloading historical records for ClinicalTrials.gov regist
 | `reason_category`      | Categorized reason for trial termination (`scientific`, `non_scientific`, `other`, or `reason not provided`)   | Categorical   |
 | `source`               | Identifies the source dataset for the trial ID (e.g., `intovalue`, `contrast`)                                 | Character     |
 | `has_summary_result`   | Boolean indicating whether summary results are available on ClinicalTrials.gov for the trial                   | Boolean       |
-| `has_summaty_result_updated`| Boolean indicating whether summary results are available on ClinicalTrials.gov or EUCTR for the trial |Boolean|
+| `has_summary_result_updated`| Boolean indicating whether summary results are available on ClinicalTrials.gov or EUCTR for the trial |Boolean|
 | `start_date`           | The date the trial started (format: `YYYY-MM-DD`)                                                              | Date          |
 | `stop_date`            | The date when the trial's status was first updated to "Terminated" in the registry (format: `YYYY-MM-DD`)      | Date          |
 | `trial_days`           | Number of days the trial was ongoing until termination, calculated as `stop_date - start_date`                 | Integer       |
