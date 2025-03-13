@@ -2,4 +2,15 @@
 .Rhistory
 .RData
 .Ruserdata
+data/raw/intovalue_raw
+data/processed/termination_reasons/extraction_form_updated.csv
 data/processed/2023-12-01-historical-versions.csv
+data/raw/copy-euctr_data_quality_results_scrape_feb_2024.csv
+deprecated/
+data/manual/primary_reason.tsv
+data/raw/intovalue/intovalue_raw.csv
+data/processed/termination_reasons/terminated_whystopped.csv
+data/processed/termination_reasons/terminated_whystopped.txt
+data/processed/sae_risk_analysis/meta_analysis_results.csv
+data/manual/2024-02-14-primary_reason.tsv
+data/manual/2024-04-25_081753-form_1-refset_5-final.tsv
