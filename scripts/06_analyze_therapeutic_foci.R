@@ -6,6 +6,7 @@ library(furniture)
 library(readr)
 library(here)
 library(TrialFociMapper)
+library(tidyr)
 
 # ---------------------------------------------------------------
 # Example: How to fetch therapeutic foci using TrialFociMapper package
@@ -42,15 +43,38 @@ terminated_foci_contrast <- clean_foci_data(terminated_foci_contrast)
 
 # Combine datasets and add labels
 all_foci_data <- bind_rows(
-  completed_foci_intovalue %>% mutate(source = "Completed Intovalue"),
-  completed_foci_contrast %>% mutate(source = "Completed Contrast"),
-  terminated_foci_intovalue %>% mutate(source = "Terminated Intovalue"),
-  terminated_foci_contrast %>% mutate(source = "Terminated Contrast")
+  completed_foci_intovalue |> mutate(source = "Completed Intovalue"),
+  completed_foci_contrast |> mutate(source = "Completed Contrast"),
+  terminated_foci_intovalue |> mutate(source = "Terminated Intovalue"),
+  terminated_foci_contrast |> mutate(source = "Terminated Contrast")
 )
 
-# Generate summary table
+
 all_foci_table <- furniture::table1(
   all_foci_data,
   trial_foci_table_list, splitby = "source",
-  na.rm = TRUE
+  na.rm = TRUE,
+  rounding_perc = 0
 )
+print(all_foci_table)
+
+
+# Define the focuses you want to retain
+keep_foci <- c("Neoplasms", "Cardiovascular Diseases", "Nervous System Diseases",
+               "Infections", "Mental Disorders", "No Foci Entry")
+
+# Modify your dataset to aggregate other therapeutic focuses
+all_foci_data_2 <- all_foci_data %>%
+  mutate(trial_foci_table_list = ifelse(trial_foci_table_list %in% keep_foci, trial_foci_table_list, "Miscellaneous"))
+
+# Generate complete summary table
+all_foci_table_2 <- furniture::table1(
+  all_foci_data_2,
+  trial_foci_table_list, splitby = "source",
+  na.rm = TRUE,
+  rounding_perc = 0
+)
+
+print(all_foci_table_2)
+
+

@@ -12,6 +12,17 @@ library(terminatedtrialsstudy)
 # Load Intovalue dataset
 intovalue_raw <- import("https://github.com/maia-sh/intovalue-data/blob/main/data/processed/trials.rds?raw=true")
 
+# Count total number of intovalue trials
+intovalue_raw |>
+  filter(
+    iv_completion,
+    iv_status,
+    iv_interventional,
+    has_german_umc_lead,
+    !(is_dupe & iv_version == 1),
+  ) |>
+  summarise(total_iv_ids = n_distinct(id))
+
 # Filter and clean the data (Completed Intovalue trials)
 completed_intovalue <- 
   intovalue_raw |>
@@ -88,6 +99,10 @@ completed_intovalue_table <- furniture::table1(
 
 # Load Contrast dataset
 contrast_raw <- read.csv(here::here("data", "raw", "contrast", "California-trials_2014-2017_exp_updated.csv"), sep = ";")
+
+# Count total number of contrast trials
+contrast_raw |>
+  summarise(total_ct_ids = n_distinct(id))
 
 # Filter for completed trials
 completed_contrast <- contrast_raw |> filter(recruitment_status == "Completed") |> 
