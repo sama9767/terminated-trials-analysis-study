@@ -1,4 +1,4 @@
-# terminated-trials-analysis-study
+# terminated-trials-analysis-study [IN DEVELOPMENT]
 Data processing and analysis: Research project on analyzing terminated trials using two datasets from intovlaue (German UMCs) and contrast (Californian UMCs). See protocol https://osf.io/n4ujs/.
 
 - Preprint: TBD
