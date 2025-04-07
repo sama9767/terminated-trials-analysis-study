@@ -57,14 +57,15 @@ all_foci_table <- furniture::table1(
   rounding_perc = 0
 )
 print(all_foci_table)
+#write.csv(all_foci_table, file = here::here("data", "processed","therapeutic_foci" , "all_foci_table.csv"))
 
 
-# Define the focuses you want to retain
+# Define focuses to retain in main table
 keep_foci <- c("Neoplasms", "Cardiovascular Diseases", "Nervous System Diseases",
                "Infections", "Mental Disorders", "No Foci Entry")
 
-# Modify your dataset to aggregate other therapeutic focuses
-all_foci_data_2 <- all_foci_data %>%
+# Add miscellaneous tag
+all_foci_data_2 <- all_foci_data |>
   mutate(trial_foci_table_list = ifelse(trial_foci_table_list %in% keep_foci, trial_foci_table_list, "Miscellaneous"))
 
 # Generate complete summary table
@@ -76,5 +77,3 @@ all_foci_table_2 <- furniture::table1(
 )
 
 print(all_foci_table_2)
-
-

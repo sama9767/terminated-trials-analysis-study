@@ -84,9 +84,9 @@ trials_non_scientific <-
 
 # Analyze how patients were included in these trials terminated due to scientific and non-scientific reason 
 # and how long these trials were running (e.g. average trial days and actual enrollment).
-termination_summary <- terminated_combined %>%
- filter(!is.na(reason_category)) %>%
- group_by(reason_category) %>%
+termination_summary <- terminated_combined |>
+ filter(!is.na(reason_category)) |>
+ group_by(reason_category) |>
    summarise(
     n_trials = n(),
     avg_enrollment = round(mean(actual_enrollment, na.rm = TRUE)),

@@ -32,5 +32,11 @@ terminated_combined <-
   select(nctid, source, reason_for_termination, reason_category, has_summary_result, has_summary_result_updated,
          start_date, stop_date, trial_days, anticipated_enrollment, actual_enrollment, primary_reason_recoded)
 
+# Get trials for SAE analysis
+SAE_analysis_trials <- subset(terminated_combined, 
+                          reason_category == "non_scientific_reason" & has_summary_result_updated == TRUE)
+print(SAE_analysis_trials)
+
+
 #write.csv(terminated_combined, file = here::here("data", "processed", "terminated_combined_3.csv"))
 #write.csv(iv_terminated_crossreg, file = here::here("data", "processed", "intovalue","iv_terminated_crossreg_updated.csv"))

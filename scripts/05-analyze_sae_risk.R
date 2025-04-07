@@ -7,63 +7,39 @@ library(meta)
 library(assertthat)
 
 
-# Load extraction form with categorized reasons for termination
-extraction_form_updated <- read_csv(here::here("data", "processed","termination_reasons", "terminated_reason_categorized.csv")) |>
-  select (-...1)
-
-# Load cross-registration data
-iv_terminated_crossreg <- read.csv(here::here("data", "processed", "intovalue", "iv_terminated_crossreg_updated.csv"))
-
-# Join cross-registration data with termination reasons
-patient_harm <- iv_terminated_crossreg |>
-  left_join(extraction_form_updated, by = c("id" = "nctid"))
-
-# Filter trials for SAE analysis:
-# - Terminated due to non-scientific reasons
-# - No summary results in ClinicalTrials.gov
-# - Cross-registered in EUCTR with summary results
-patient_harm_check <- 
-  patient_harm |>
-  filter(reason_category == "non_scientific_reason" & 
-           has_summary_results == FALSE & 
-           is_crossreg_eudract == TRUE & 
-           result == "result found")
-
-# write.csv(patient_harm_check, file = here::here("data", "processed", "patient_harm_check.csv"))
-
-# Load patient harm data from ClinicalTrials.gov and EUCTR
-patient_harm_ctgov_raw <- read_xlsx(here::here("data","manual", "manual-2024-04-29-sae_by_group.xlsx"), sheet = "Reconciliation_CTGOV")
-patient_harm_euctr_raw <- read_xlsx(here::here("data","manual", "manual-2024-04-29-sae_by_group.xlsx"), sheet = "Reconciliation_EUCTR")
+# Get trials with sae risk analtsis
+sae_ctgov_raw  <- read_xlsx(here::here("data","manual", "manual-2024-04-29-sae_by_group.xlsx"), sheet = "Reconciliation_CTGOV")
+sae_euctr_raw <- read_xlsx(here::here("data","manual", "manual-2024-04-29-sae_by_group.xlsx"), sheet = "Reconciliation_EUCTR")
 
 # Filter CTGOV trials included for patient harm analysis
-patient_harm_ctgov <- 
-  patient_harm_ctgov_raw |>
+sae_ctgov <- 
+  sae_ctgov_raw |>
   group_by(nctid) |>
   filter(final_include_for_patient_harm == TRUE) |>
   select(nctid, group_id, seriousNumAffected, seriousNumAtRisk, final_arm_assigned, final_include_for_patient_harm)
 
 # Count distinct ClinicalTrials.gov trials included
-patient_harm_ctgov |> distinct(nctid) |> nrow()
+sae_ctgov |> distinct(nctid) |> nrow()
 
 # Filter EUCTR trials included for patient harm analysis
-patient_harm_euctr <- patient_harm_euctr_raw |>
+sae_euctr <- sae_euctr_raw |>
   group_by(id) |>
   filter(final_include_for_patient_harm == TRUE) |>
   select(id, group_id, seriousNumAffected, seriousNumAtRisk, final_arm_assigned, final_include_for_patient_harm) |>
   rename(nctid = id)
 
 # Count distinct EUCTR trials included
-patient_harm_euctr |> distinct(nctid) |> nrow()
+sae_euctr |> distinct(nctid) |> nrow()
 
 # Combine ClinicalTrials.gov and EUCTR data for analysis
-patient_harm <- rbind(patient_harm_ctgov, patient_harm_euctr)
-patient_harm |> distinct(nctid) |> nrow()
+sae_combined  <- rbind(sae_ctgov, sae_euctr)
+sae_combined |> distinct(nctid) |> nrow()
 
 # Aggregate similar trial arms for analysis
-aggregated_data <- terminatedtrialsstudy::aggregate_arms(patient_harm, trial_id = "nctid", arm_assigned = "final_arm_assigned", affected_col = "seriousNumAffected", risk_col = "seriousNumAtRisk")
+aggregated_sae_data <- terminatedtrialsstudy::aggregate_arms(sae_combined, trial_id = "nctid", arm_assigned = "final_arm_assigned", affected_col = "seriousNumAffected", risk_col = "seriousNumAtRisk")
 
 # Summarize data by trial for analysis
-df_summary <- aggregated_data |>
+aggregated_sae_summary <- aggregated_sae_data |>
   group_by(nctid) |>
   summarise(
     event_control = sum(total_seriousnumaffected[final_arm_assigned == "Control Arm"]),
@@ -75,11 +51,11 @@ df_summary <- aggregated_data |>
 
 # Conduct meta-analysis to calculate risk ratios (RR)
 meta_analysis <- metabin(
-  event.e = df_summary$event_intervention, 
-  n.e = df_summary$n_intervention,
-  event.c = df_summary$event_control, 
-  n.c = df_summary$n_control,
-  data = df_summary,
+  event.e = aggregated_sae_summary$event_intervention, 
+  n.e = aggregated_sae_summary$n_intervention,
+  event.c = aggregated_sae_summary$event_control, 
+  n.c = aggregated_sae_summary$n_control,
+  data = aggregated_sae_summary,
   studlab = nctid,
   sm = "RR" 
 ) 
