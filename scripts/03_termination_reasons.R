@@ -1,6 +1,8 @@
 # Analyze termination reasons
 
+
 library(dplyr)
+library(irr)
 
 # Read the extraction form file
 extraction_form <- read.delim(here::here("data", "manual", "2024-04-25_081753-form_1-refset_5-final.tsv"), header = TRUE)
@@ -84,16 +86,32 @@ trials_non_scientific <-
 
 # Analyze how patients were included in these trials terminated due to scientific and non-scientific reason 
 # and how long these trials were running (e.g. average trial days and actual enrollment).
+# Analyze how patients were included in these trials terminated due to scientific and non-scientific reason 
+# and how long these trials were running (e.g. average trial days and actual enrollment).
 termination_summary <- terminated_combined |>
- filter(!is.na(reason_category)) |>
- group_by(reason_category) |>
-   summarise(
+  filter(!is.na(reason_category)) |>
+  group_by(reason_category) |>
+  summarise(
     n_trials = n(),
     avg_enrollment = round(mean(actual_enrollment, na.rm = TRUE)),
     median_enrollment = median(actual_enrollment, na.rm = TRUE),
     avg_duration_days = round(mean(trial_days, na.rm = TRUE)),
-    median_duration_days = median(trial_days, na.rm = TRUE)
-         )
+    median_duration_days = median(trial_days, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(
+    percent_trials = round(100 * n_trials / sum(n_trials), 1)
+  )
+
+# calculate IRR
+# Access the /https://numbat.bgcarlisle.com/terminated/export/
+# "Choose element for IRR analysis" under Extractions for "Export extractions: reason_for_termination_2.0" then chose "Primary reason"
+
+# Read the data
+data <- read_tsv(here::here("data", "manual", "2024-02-14-primary_reason.tsv"))
+
+# Compute Cohen’s kappa assuming data has two rater columns
+kappa2(data)
 
 
 #write.csv(terminated_combined, file = here::here("data", "processed", "terminated_combined_2.csv"))

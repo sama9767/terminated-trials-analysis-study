@@ -14,7 +14,7 @@ library(lubridate)
 intovalue_raw <- rio::import("https://github.com/maia-sh/intovalue-data/blob/main/data/processed/trials.rds?raw=true")
 contrast_raw <- read.csv(here::here("data","raw","contrast", "California-trials_2014-2017_exp_updated.csv"), sep = ";")
 
-# Get historical version of included trial data
+# Get historical version of included trial data (see here for details: https://github.com/bgcarlisle/cthist)
 cthist_raw <- read_csv(here::here("data", "processed", "2023-12-01-historical-versions.csv"))
 
 # Filter for terminated trials with actual enrollment > 0
@@ -63,46 +63,55 @@ terminated_intovalue <-
   rename(nctid = nctid...1)
 
 
-# Manually assign missing anticipated enrollment values (for trials with 'check missing values warning)
-terminated_intovalue <- 
-  terminated_intovalue |>
+# Manually assign missing anticipated enrollment values
+# (Include only those trials where imputation is justified and used in analysis)
+# For details see: https://github.com/sama9767/terminated-trials-study/issues/7
+
+terminated_intovalue <- terminated_intovalue |>
   mutate(
     anticipated_enrollment = case_when(
+      # Included trials 
       nctid == "NCT00150878" ~ 172,
-      nctid == "NCT01030666" ~ 61,
-      nctid == "NCT01297712" ~ 1069,
-      nctid == "NCT01215266" ~ 98,
-      nctid == "NCT00405873" ~ 73,
-      nctid == "NCT01071135" ~ 5,
-      nctid == "NCT01199133" ~ 471,
-      nctid == "NCT02188212" ~ 53,
-      nctid == "NCT02585752" ~ 20,
-      nctid == "NCT02595840" ~ 4,
-      nctid == "NCT02818959" ~ 7,
-      nctid == "NCT02891863" ~ 9,
-      nctid == "NCT02634606" ~ 13,
-      nctid == "NCT03023709" ~ 3,
       nctid == "NCT03028987" ~ 12,
-      nctid == "NCT03115385" ~ 22,
-      nctid == "NCT02967380" ~ 14,
-      TRUE ~ anticipated_enrollment  # Keep existing values if none of the conditions match
+      # Excluded trials (commented out, documented for reference)
+      # nctid == "NCT01030666" ~ 61,      # Exclude: Type B
+      # nctid == "NCT01297712" ~ 1069,  # Exclude: Type B
+      # nctid == "NCT01215266" ~ 98,    # Exclude: Type B
+      # nctid == "NCT00405873" ~ 73,    # Exclude: Type C
+      # nctid == "NCT01071135" ~ 5,     # Exclude: Type C
+      # nctid == "NCT01199133" ~ 471,   # Exclude: Type B
+      # nctid == "NCT02188212" ~ 53,    # Exclude: Type B
+      # nctid == "NCT02585752" ~ 20,    # Exclude: Type C
+      # nctid == "NCT02595840" ~ 4,     # Exclude: Type C
+      # nctid == "NCT02818959" ~ 7,     # Exclude: Type B
+      # nctid == "NCT02891863" ~ 9,     # Exclude: Type B
+      # nctid == "NCT02634606" ~ 13,    # Exclude: Type B
+      # nctid == "NCT03023709" ~ 3,     # Exclude: Type B
+      # nctid == "NCT03115385" ~ 22,    # Exclude: Type B
+      # nctid == "NCT02967380" ~ 14,    # Exclude: Type B
+      TRUE ~ anticipated_enrollment
     )
   )
 
 
-# Calculate degree of enrollment and trial duration
+# Calculate degree of enrollment and trial duration ( missing anticipated or actual variables)
 terminated_intovalue <- duration_of_trial(terminated_intovalue, "start_date", "stop_date")
 
-trial_days_stats <- 
-  terminated_intovalue |>
+trial_duration_stats <- terminated_intovalue |>
   summarise(
-    max_trial_days = max(trial_days, na.rm = TRUE),  
-    min_trial_days = min(trial_days, na.rm = TRUE),   
-    total_trial_days = sum(trial_days, na.rm = TRUE) 
+    total_trial_days = sum(trial_days, na.rm = TRUE),
+    median_trial_days = median(trial_days, na.rm = TRUE),
+    Q1_trial_days = quantile(trial_days, 0.25, na.rm = TRUE),
+    Q3_trial_days = quantile(trial_days, 0.75, na.rm = TRUE),
+    IQR_trial_days = IQR(trial_days, na.rm = TRUE)
   )
 
-enrollment_stats <- degree_of_enrollment(terminated_intovalue, anticipated_column =  "anticipated_enrollment", actual_column =  "actual_enrollment")
 
+
+terminated_intovalue_enrol <- terminated_intovalue |> filter(!is.na(anticipated_enrollment))
+terminated_intovalue_enrol <- degree_of_enrollment(terminated_intovalue_enrol, anticipated_column =  "anticipated_enrollment", actual_column =  "actual_enrollment", trial_column = "nctid")
+
+terminated_intovalue_enrol_stats <- terminated_intovalue_enrol$updated_dataframe
 
 # Get other characteristics from original Intovalue data
 terminated_intovalue <- 
@@ -174,18 +183,39 @@ terminated_contrast <-
   select(nctid...1, reason_for_termination, anticipated_enrollment,actual_enrollment, has_summary_result, start_date, stop_date ) |>
   rename(nctid = nctid...1)
 
+
+# Manually assign missing anticipated enrollment values (for trials with 'check missing values warning)
+ terminated_contrast <- 
+   terminated_contrast |>
+   mutate(
+     anticipated_enrollment = case_when(
+     # Included trials 
+       nctid == "NCT03028987" ~ 12, 
+     # nctid == "NCT02634606" ~ 13 (exclude, type b),
+     # nctid == "NCT03023709" ~ 3, (exclude, type b)
+     # nctid == "NCT03115385" ~ 22, (exclude, type c)
+     # nctid == "NCT02967380" ~ 14, (exclude, type b)
+       TRUE ~ anticipated_enrollment  # Keep existing values if none of the conditions match
+     )
+   )
+
+
 # Calculate degree of enrollment and trial duration
 terminated_contrast <- duration_of_trial(terminated_contrast, "start_date", "stop_date")
 
-trial_days_stats <- 
-  terminated_contrast |>
-  reframe(
-    mean = mean(trial_days, na.rm = TRUE),  
-    range = range(trial_days, na.rm = TRUE)
-    
+trial_duration_stats <- terminated_contrast |>
+  summarise(
+    total_trial_days = sum(trial_days, na.rm = TRUE),
+    median_trial_days = median(trial_days, na.rm = TRUE),
+    Q1_trial_days = quantile(trial_days, 0.25, na.rm = TRUE),
+    Q3_trial_days = quantile(trial_days, 0.75, na.rm = TRUE),
+    IQR_trial_days = IQR(trial_days, na.rm = TRUE)
   )
 
-enrollment_stats <- degree_of_enrollment(terminated_intovalue, anticipated_column =  "anticipated_enrollment", actual_column =  "actual_enrollment")
+
+terminated_contrast_enrol <- terminated_contrast |> filter(!is.na(anticipated_enrollment))
+terminated_contrast_enrol <- degree_of_enrollment(terminated_contrast_enrol, anticipated_column =  "anticipated_enrollment", actual_column =  "actual_enrollment", trial_column = "nctid")
+terminated_contrast_enrol_stats <- terminated_contrast_enrol$updated_dataframe
 
 
 # Get other characteristics from original Contrast data
